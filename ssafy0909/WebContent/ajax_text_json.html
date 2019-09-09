@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>식품정보 읽어오기 json 버전</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		getFoodJson();
+	})
+	
+	function getFoodJson(){
+		$.ajax({
+			url:'res/foodInfo.json',
+			method:'get',
+			success:function(food_data){
+				alert('식품 제이슨 로드 완료!');
+				var r_data="";
+				$.each(food_data, function(i, food){
+					r_data+='<tr>';
+					r_data+='<td>'+food['name']+'</td>';
+					
+					var tmp = food['nutrition-per-100g'];
+					if(tmp==null){
+						tmp = food['nutrition-per-100ml'];
+					}
+					console.log(food['name']+'***'+tmp);
+					r_data+='<td>'+tmp.energy+'</td>';
+					r_data+='<td>'+tmp.protein+'</td>';
+					r_data+='<td>'+tmp.fat+'</td>';
+					r_data+='<td>'+tmp.carbohydrate+'</td>';
+					
+					r_data+='</tr>';
+				})
+				$('table tr:gt(0)').remove();
+				$('table').append(r_data);
+			},
+			error:function(){}
+		})
+	}
+</script>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>식품명</th>
+			<th>열량</th>
+			<th>단백질</th>
+			<th>지방</th>
+			<th>탄수화물</th>
+		</tr>
+	</table>
+</body>
+</html>

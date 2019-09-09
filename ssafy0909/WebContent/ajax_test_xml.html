@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>xml 데이터 동적으로 불러오기.</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		getFood();
+// 		$('#myBtn').click(function(){
+// 			$.ajax({
+// 				url:'res/foodInfo.xml',
+// 				method:'get',
+// 				success:function(food_data){
+// 					var r_data="";
+					
+// 					$(food_data).find('foods').find('food').each(function(){
+// 						r_data += "<tr>";
+// 						r_data += "<td>"+$(this).find('code').text()+"</td>";
+// 						r_data += "<td>"+$(this).find('name').text()+"</td>";
+// 						r_data += "<td>"+$(this).find('maker').text()+"</td>";
+// 						r_data += "<td>"+$(this).find('material').text()+"</td>";
+// 						r_data += "</tr>";
+// 					})
+// 					$('table tr:gt(0)').remove();
+// 					$('table').append(r_data);
+					
+// 				},
+// 				error:function(ex){
+// 					$('#myBtn').after(ex.message);
+// 				}
+// 			})
+// 		})
+	})
+	
+	
+	function getFood(){
+		$.ajax({
+			url:'res/foodInfo.xml',
+			method:'get',
+			success:function(food_data){
+				var r_data="";
+				
+				$(food_data).find('foods').find('food').each(function(){
+					r_data += "<tr>";
+					r_data += "<td><img src='img/"+$(this).find('name').text()+".jpg' width='100' height='150'></td>";
+					r_data += "<td>"+$(this).find('code').text()+"</td>";
+					r_data += "<td>"+$(this).find('name').text()+"</td>";
+					r_data += "<td>"+$(this).find('maker').text()+"</td>";
+					r_data += "<td>"+$(this).find('material').text()+"</td>";
+					r_data += "</tr>";
+				})
+				$('table tr:gt(0)').remove();
+				$('table').append(r_data);
+				
+			},
+			error:function(ex){
+				$('#myBtn').after(ex.message);
+			}
+		})
+	}
+	
+</script>
+
+</head>
+<body>
+	<button id="myBtn">식품데이터 로드</button>
+	<table border="1">
+		<tr>
+			<th>상품 이미지</th>
+			<th>식품코드</th>
+			<th>식품명</th>
+			<th>제조사</th>
+			<th>성분</th>			
+		</tr>
+		
+	</table>
+
+</body>
+</html>
