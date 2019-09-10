@@ -193,7 +193,7 @@
 						<div class="input-group">
 							<input type="text" class="form-control bg-light border-0 small"
 								placeholder="Search for..." aria-label="Search"
-								aria-describedby="basic-addon2">
+								aria-describedby="basic-addon2" id = "keyword">
 							<div class="input-group-append">
 								<button class="btn btn-primary" type="button">
 									<i class="fas fa-search fa-sm"></i>
@@ -555,27 +555,186 @@
 						</div>
 					</div>
 						
-						<script>
+<script>
 						
 	$(function(){
-		getFood();
+		getFood2(null);
+		
+		$('#keyword').keyup(function(){
+			getFood2($(this).val());
+		})
 	})
+
+	
+	function getFood2(keyword){
+		$.ajax({
+			url:'res/foodInfo.xml',
+			method:'get',
+			success:function(food_data){
+
+				var r_data="";
+				var count = 0;
+				 
+				$(food_data).find('foods').find('food').each(function(i){
+					if(keyword==null || keyword==''){
+						console.log('처음!!');
+						if((i%3) == 0){
+							console.log('************************');
+							myPieChart.render();
+							//r_data += "rowStart!!!!!";
+							r_data += "<div class='row'>";
+						}
+					
+						r_data += "<div class = 'col-lg-4 mb-4'>";
+						r_data += "<div class='card shadow mb-4'>";
+						r_data += "<div class='card-header py-3'>";
+						r_data += "<h6 class='m-0 font-weight-bold text-primary'>"+$(this).find('name').text()+"</h6>";
+						r_data += "</div>";
+						r_data += "<div class='card-body'>";
+						r_data += "<div class='text-center'>";
+						r_data += "<p><img src='img/"+$(this).find('name').text()+".jpg' width='200' height='200'></p>";
+						r_data += "</div>";
+				
+						r_data +="<a href=food.html?id="+ $(this).find('code').text() +" class='btn btn-info btn-icon-split' >"
+						r_data +=	"<span class='icon text-white-50'>"
+						r_data +=	"<i class='fas fa-info-circle' ></i></span><span class='text'> 자세히 보기 </span></a>"
+				
+						r_data += "</div>";
+						r_data += "</div>";
+						r_data += "</div>";
+
+						if((i%3) == 2){
+							//r_data += "rowEnd!!!!!!!!!!!!!!!";
+							r_data += "</div>";
+						}
+						//count++;										
+				}else if($(this).find('name').text().includes(keyword)){
+					if((count%3) == 0){
+						console.log('여기 설마??');
+						myPieChart.render();
+						r_data += "rowStart!!!!!";
+						r_data += "<div class='row'>";
+					}
+					
+					r_data += "<div class = 'col-lg-4 mb-4'>";
+					r_data += "<div class='card shadow mb-4'>";
+					r_data += "<div class='card-header py-3'>";
+					r_data += "<h6 class='m-0 font-weight-bold text-primary'>"+$(this).find('name').text()+"</h6>";
+					r_data += "</div>";
+					r_data += "<div class='card-body'>";
+					r_data += "<div class='text-center'>";
+					r_data += "<p><img src='img/"+$(this).find('name').text()+".jpg' width='200' height='200'></p>";
+					r_data += "</div>";
+				
+					r_data +="<a href=food.html?id="+ $(this).find('code').text() +" class='btn btn-info btn-icon-split' >"
+					r_data +=	"<span class='icon text-white-50'>"
+					r_data +=	"<i class='fas fa-info-circle' ></i></span><span class='text'> 자세히 보기 </span></a>"
+				
+					r_data += "</div>";
+					r_data += "</div>";
+					r_data += "</div>";
+
+					if((count%3) == 2){
+						//r_data += "rowEnd!!!!!!!!!!!!!!!";
+						r_data += "</div>";
+					}
+					count++;
+					
+				}
+// 				r_data += "</div>";
+				$('table tr:gt(0)').remove();
+
+				$('#my-food-container').html(r_data);
+			}) // each func
+		},
+			error:function(ex){
+				$('#myBtn').after(ex.message);
+			}
+			///
+      			 
+      			 
+
+			///
+		})
+	}
 	
 	function getFood(){
 		$.ajax({
 			url:'res/foodInfo.xml',
 			method:'get',
 			success:function(food_data){
+
 				var r_data="";
-				var ctx = document.getElementById("myPieChart");
 				var count = 0;
-				
+// 				$('#keyword').keyup(function() { 
+// 					var r_data="";
+// 					var count = 0;
+// 					var k = $(this).val();
+// 					console.log(k);
+// 					$(food_data).find('foods').find('food').each(function(i){
+// 						if($(this).find('name').text().includes(k)){
+// 							console.log('hello');
+// 							if((i%3) == 0){
+// 								console.log('************************');
+// 								myPieChart.render();
+// 								r_data += "rowStart!!!!!";
+// 								r_data += "<div class='row'>";
+// 							}
+							
+// 							r_data += "<div class = 'col-lg-4 mb-4'>";
+// 							r_data += "<div class='card shadow mb-4'>";
+// 							r_data += "<div class='card-header py-3'>";
+// 							r_data += "<h6 class='m-0 font-weight-bold text-primary'>"+$(this).find('name').text()+"</h6>";
+// 							r_data += "</div>";
+// 							r_data += "<div class='card-body'>";
+// 							r_data += "<div class='text-center'>";
+// 							r_data += "<p><img src='img/"+$(this).find('name').text()+".jpg' width='200' height='200'></p>";
+// 							r_data += "</div>";
+						
+// 							r_data +="<a href=food.html?id="+ $(this).find('code').text() +" class='btn btn-info btn-icon-split' >"
+// 							r_data +=	"<span class='icon text-white-50'>"
+// 							r_data +=	"<i class='fas fa-info-circle' ></i></span><span class='text'> 자세히 보기 </span></a>"
+						
+// 		/* 						  <a href="#" class="btn btn-info btn-icon-split">
+// 		                    <span class="icon text-white-50">
+// 		                      <i class="fas fa-info-circle"></i>
+// 		                    </span>
+// 		                    <span class="text">Split Button Info</span>
+// 		                  </a> */
+// 							r_data += "</div>";
+// //		 					r_data += "<tr>";
+// 							//r_data += "<td><img src='img/"+$(this).find('name').text()+".jpg' width='100' height='150'></td>";
+// //		 					r_data += "</tr>";
+// 							r_data += "</div>";
+// 							r_data += "</div>";
+// //		 					console.log($(this).find('name').text());
+// //		 					console.log('cnt:'+count);
+// 							if((i%3) == 2){
+// //		 						console.log(count);
+// 								r_data += "rowEnd!!!!!!!!!!!!!!!";
+// 								r_data += "</div>";
+// //		 						count = 0;
+// 							}
+// 							count++;
+
+// 					}
+// // 						console.log(r_data);
+// 					$('#my-food-container').html(r_data);
+								
+// 				})
+// // 					var temp1 = $("#my-food-container > div > div > div > div > h6:contains('" + k + "')").text();
+// // 					console.log(temp1);
+// //          			 $("#my-food-container").hide();
+// // 	          		 var temp = $("#my-food-container > div > div > div > div > h6:contains('" + k + "')");
+// // 					console.log($(temp).parent().parent().parent().parent());
+// // 	          		$(temp).parent().parent().parent().parent().show();
+// 	      		})
 				 
 				$(food_data).find('foods').find('food').each(function(i){
 					if((i%3) == 0){
 						console.log('************************');
 						myPieChart.render();
-						r_data += "rowStart!!!!!";
+						//r_data += "rowStart!!!!!";
 						r_data += "<div class='row'>";
 					}
 					
@@ -609,22 +768,26 @@
 // 					console.log('cnt:'+count);
 					if((i%3) == 2){
 // 						console.log(count);
-						r_data += "rowEnd!!!!!!!!!!!!!!!";
+						//r_data += "rowEnd!!!!!!!!!!!!!!!";
 						r_data += "</div>";
 // 						count = 0;
 					}
 					count++;
 				})
-// 				r_data += "</div>";
-// 				$('table tr:gt(0)').remove();
-// 				console.log($('#my-food-container').html());
+				r_data += "</div>";
+				$('table tr:gt(0)').remove();
+				console.log($('#my-food-container').html());
 				console.log(r_data);	
 				$('#my-food-container').html(r_data);
-				putChart();
 			},
 			error:function(ex){
 				$('#myBtn').after(ex.message);
 			}
+			///
+      			 
+      			 
+
+			///
 		})
 	}
 	</script>
