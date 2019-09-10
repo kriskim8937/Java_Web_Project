@@ -396,7 +396,8 @@
 									<div class="row no-gutters align-items-center">
 										<div class="col mr-2">
 											<div
-												class="text-xs font-weight-bold text-primary text-uppercase mb-1"> 당월 매출</div>
+												class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings
+												(Monthly)</div>
 											<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
 										</div>
 										<div class="col-auto">
@@ -414,7 +415,8 @@
 									<div class="row no-gutters align-items-center">
 										<div class="col mr-2">
 											<div
-												class="text-xs font-weight-bold text-success text-uppercase mb-1">년간 매출</div>
+												class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings
+												(Annual)</div>
 											<div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
 										</div>
 										<div class="col-auto">
@@ -477,47 +479,18 @@
 					<!-- Content Row -->
 
 					<div class="row">
-
-						<!-- Area Chart -->
-						<div class="col-xl-8 col-lg-7">
-							<div class="card shadow mb-4">
-								<!-- Card Header - Dropdown -->
-								<div
-									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">신라면 판매량</h6>
-									<div class="dropdown no-arrow">
-										<a class="dropdown-toggle" href="#" role="button"
-											id="dropdownMenuLink" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="false"> <i
-											class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-										</a>
-										<div
-											class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-											aria-labelledby="dropdownMenuLink">
-											<div class="dropdown-header">Dropdown Header:</div>
-											<a class="dropdown-item" href="#">Action</a> <a
-												class="dropdown-item" href="#">Another action</a>
-											<div class="dropdown-divider"></div>
-											<a class="dropdown-item" href="#">Something else here</a>
-										</div>
-									</div>
-								</div>
-								<!-- Card Body -->
-								<div class="card-body">
-									<div class="chart-area">
-										<canvas id="myAreaChart"></canvas>
-									</div>
-								</div>
-							</div>
+					row start!
+						<div  id="my-food-container">
+						
 						</div>
-
+		
 						<!-- Pie Chart -->
 						<div class="col-xl-4 col-lg-5">
 							<div class="card shadow mb-4">
 								<!-- Card Header - Dropdown -->
 								<div
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">구매자 연령비</h6>
+									<h6 class="m-0 font-weight-bold text-primary">영양분 비율</h6>
 									<div class="dropdown no-arrow">
 										<a class="dropdown-toggle" href="#" role="button"
 											id="dropdownMenuLink" data-toggle="dropdown"
@@ -543,16 +516,18 @@
 									</div>
 									<div class="mt-4 text-center small">
 										<span class="mr-2"> <i
-											class="fas fa-circle text-primary"></i> 20대
+											class="fas fa-circle text-primary"></i> Direct
 										</span> <span class="mr-2"> <i
-											class="fas fa-circle text-success"></i> 30대
+											class="fas fa-circle text-success"></i> Social
 										</span> <span class="mr-2"> <i class="fas fa-circle text-info"></i>
-											그 외
+											Referral
 										</span>
 									</div>
 								</div>
 							</div>
 						</div>
+						row end!!
+						
 					</div>
 						
 						<script>
@@ -560,67 +535,55 @@
 	$(function(){
 		getFood();
 	})
-	
+	function getParameterByName(name) {
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
 	function getFood(){
 		$.ajax({
 			url:'res/foodInfo.xml',
 			method:'get',
 			success:function(food_data){
 				var r_data="";
-				var ctx = document.getElementById("myPieChart");
 				var count = 0;
-				
+				var id = getParameterByName("id");
+				console.log(id);
 				 
 				$(food_data).find('foods').find('food').each(function(i){
-					if((i%3) == 0){
-						console.log('************************');
-						myPieChart.render();
-						r_data += "rowStart!!!!!";
-						r_data += "<div class='row'>";
+					if($(this).find('code').text() == id){
+						r_data += "<div class = 'col-lg-6 mb-4'>";
+						r_data += "<div class='card shadow mb-4'>";
+						r_data += "<div class='card-header py-3'>";
+						r_data += "<h6 class='m-0 font-weight-bold text-primary'>"+$(this).find('name').text()+"</h6>";
+						r_data += "</div>";
+						r_data += "<div class='card-body'>";
+						r_data += "<div class='text-center'>";
+						r_data += "<p><img src='img/"+$(this).find('name').text()+".jpg' width='200' height='200'></p>";
+						r_data += "</div>";						
+						r_data += "<p>상품 코드 "+$(this).find('code').text()+"</p>";
+						r_data += "<p>식품명"+$(this).find('name').text()+"</p>";
+						r_data += "<p>제조사 "+$(this).find('maker').text()+"</p>";
+						r_data += "<p>성분 "+$(this).find('material').text()+"</p>";
+						r_data += "</div>";
+//	 					r_data += "<tr>";
+						//r_data += "<td><img src='img/"+$(this).find('name').text()+".jpg' width='100' height='150'></td>";
+//	 					r_data += "</tr>";
+						r_data += "</div>";
+						r_data += "</div>";
+//	 					console.log($(this).find('name').text());
+//	 					console.log('cnt:'+count);
+						return;
 					}
 					
-					r_data += "<div class = 'col-lg-4 mb-4'>";
-					r_data += "<div class='card shadow mb-4'>";
-					r_data += "<div class='card-header py-3'>";
-					r_data += "<h6 class='m-0 font-weight-bold text-primary'>"+$(this).find('name').text()+"</h6>";
-					r_data += "</div>";
-					r_data += "<div class='card-body'>";
-					r_data += "<div class='text-center'>";
-					r_data += "<p><img src='img/"+$(this).find('name').text()+".jpg' width='200' height='200'></p>";
-					r_data += "</div>";
-				
-					r_data +="<a href=food.html?id="+ $(this).find('code').text() +" class='btn btn-info btn-icon-split' >"
-					r_data +=	"<span class='icon text-white-50'>"
-					r_data +=	"<i class='fas fa-info-circle' ></i></span><span class='text'> 자세히 보기 </span></a>"
-				
-/* 						  <a href="#" class="btn btn-info btn-icon-split">
-                    <span class="icon text-white-50">
-                      <i class="fas fa-info-circle"></i>
-                    </span>
-                    <span class="text">Split Button Info</span>
-                  </a> */
-					r_data += "</div>";
-// 					r_data += "<tr>";
-					//r_data += "<td><img src='img/"+$(this).find('name').text()+".jpg' width='100' height='150'></td>";
-// 					r_data += "</tr>";
-					r_data += "</div>";
-					r_data += "</div>";
-// 					console.log($(this).find('name').text());
-// 					console.log('cnt:'+count);
-					if((i%3) == 2){
-// 						console.log(count);
-						r_data += "rowEnd!!!!!!!!!!!!!!!";
-						r_data += "</div>";
-// 						count = 0;
-					}
-					count++;
+
 				})
 // 				r_data += "</div>";
 // 				$('table tr:gt(0)').remove();
 // 				console.log($('#my-food-container').html());
 				console.log(r_data);	
 				$('#my-food-container').html(r_data);
-				putChart();
 			},
 			error:function(ex){
 				$('#myBtn').after(ex.message);
@@ -628,33 +591,9 @@
 		})
 	}
 	</script>
-						<div class="foods"></div>
 
 
-						<div  id="my-food-container">
-						
-							</div>
 
-
-							<!-- /.container-fluid -->
-							<!-- Approach -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Development
-										Approach</h6>
-								</div>
-								<div class="card-body">
-									<p>SB Admin 2 makes extensive use of Bootstrap 4 utility
-										classes in order to reduce CSS bloat and poor page
-										performance. Custom CSS classes are used to create custom
-										components and custom utility classes.</p>
-									<p class="mb-0">Before working with this theme, you should
-										become familiar with the Bootstrap framework, especially the
-										utility classes.</p>
-								</div>
-							</div>
-
-						</div>
 					</div>
 
 				</div>
